@@ -1,35 +1,33 @@
-import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 public class TrainConsistManagementApp {
     public static void main(String[] args) {
 
         System.out.println("=================================");
-        System.out.println("=== UC2 add passenger to bogies to train  ===");
+        System.out.println("=== UC3 Track Unique Bogie IDs ===");
         System.out.println("=================================\n");
 
 
-        ArrayList<String> passengerBogies = new ArrayList<>();
+        Set<String> bogies = new HashSet<>();
 
 
-        passengerBogies.add("Sleeper");
-        passengerBogies.add("AC Chair");
-        passengerBogies.add("First Class");
+        bogies.add("BG101");
+        bogies.add("BG102");
+        bogies.add("BG103");
+        bogies.add("BG104");
 
 
-        System.out.println("Passenger Bogies after adding: " + passengerBogies);
+        bogies.add("BG101");
+        bogies.add("BG102");
 
 
-        passengerBogies.remove("AC Chair");
-
-        System.out.println("Passenger Bogies after removing AC Chair: " + passengerBogies);
+        System.out.println("Bogie IDs after insertion: " + bogies);
 
 
-        boolean exists = passengerBogies.contains("Sleeper");
-
-        System.out.println("Checking if Sleeper exists:");
-        System.out.println("Contains Sleeper? " + exists);
+        System.out.println("Note: Duplicates are automatically ignored by HashSet.");
 
 
-        System.out.println("Final Train Passenger Consist: " + passengerBogies);
+        System.out.println("UC3 uniqueness validation completed....");
     }
 }
