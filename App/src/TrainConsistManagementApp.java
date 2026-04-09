@@ -19,6 +19,9 @@ public class TrainConsistManagementApp {
         public String toString() {
             return name + " -> " + capacity;
         }
+        public String getName() {
+            return name;
+        }
 
     }
 
