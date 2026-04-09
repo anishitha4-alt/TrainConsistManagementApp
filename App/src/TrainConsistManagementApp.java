@@ -1,8 +1,9 @@
 import java.util.*;
+import java.io.*;
 
 public class TrainConsistManagementApp {
 
-
+    // ===== UC7: Bogie =====
     static class Bogie {
         String name;
         int capacity;
@@ -25,8 +26,7 @@ public class TrainConsistManagementApp {
         }
     }
 
-
-
+    // ===== UC11: Booking Request =====
     static class BookingRequest {
         String guestName;
         String roomType;
@@ -37,6 +37,7 @@ public class TrainConsistManagementApp {
         }
     }
 
+    // ===== UC11: Queue =====
     static class BookingRequestQueue {
         private Queue<BookingRequest> queue = new LinkedList<>();
 
@@ -53,8 +54,9 @@ public class TrainConsistManagementApp {
         }
     }
 
+    // ===== UC11 + UC12: Inventory =====
     static class RoomInventory {
-        private Map<String, Integer> rooms = new HashMap<>();
+        Map<String, Integer> rooms = new HashMap<>();
 
         public RoomInventory() {
             rooms.put("Single", 5);
@@ -72,108 +74,134 @@ public class TrainConsistManagementApp {
         }
 
         public void display() {
-            System.out.println("\nRemaining Inventory:");
+            System.out.println("\nCurrent Inventory:");
             for (String type : rooms.keySet()) {
                 System.out.println(type + ": " + rooms.get(type));
             }
         }
     }
 
+    // ===== UC11: Allocation =====
     static class RoomAllocationService {
-        public void allocateRoom(BookingRequest request, RoomInventory inventory) {
-            boolean success = inventory.allocate(request.roomType);
-
-            if (success) {
+        public void allocateRoom(BookingRequest req, RoomInventory inventory) {
+            if (inventory.allocate(req.roomType)) {
                 System.out.println("Booking confirmed for Guest: "
-                        + request.guestName + ", Room Type: " + request.roomType);
+                        + req.guestName + ", Room Type: " + req.roomType);
             } else {
-                System.out.println("No rooms available for " + request.guestName);
+                System.out.println("No rooms available for " + req.guestName);
             }
         }
     }
 
+    // ===== UC11: Thread =====
     static class ConcurrentBookingProcessor implements Runnable {
 
-        private BookingRequestQueue bookingQueue;
+        private BookingRequestQueue queue;
         private RoomInventory inventory;
-        private RoomAllocationService allocationService;
+        private RoomAllocationService service;
 
-        public ConcurrentBookingProcessor(
-                BookingRequestQueue bookingQueue,
-                RoomInventory inventory,
-                RoomAllocationService allocationService) {
-
-            this.bookingQueue = bookingQueue;
-            this.inventory = inventory;
-            this.allocationService = allocationService;
+        public ConcurrentBookingProcessor(BookingRequestQueue q,
+                                          RoomInventory i,
+                                          RoomAllocationService s) {
+            this.queue = q;
+            this.inventory = i;
+            this.service = s;
         }
 
-        @Override
         public void run() {
             while (true) {
 
-                BookingRequest request;
+                BookingRequest req;
 
-                // synchronized queue access
-                synchronized (bookingQueue) {
-                    if (bookingQueue.isEmpty()) {
-                        break;
-                    }
-                    request = bookingQueue.getRequest();
+                synchronized (queue) {
+                    if (queue.isEmpty()) break;
+                    req = queue.getRequest();
                 }
 
-                // synchronized inventory update
                 synchronized (inventory) {
-                    allocationService.allocateRoom(request, inventory);
+                    service.allocateRoom(req, inventory);
                 }
             }
         }
     }
 
+    // ===== UC12: File Persistence =====
+    static class FilePersistenceService {
 
+        public void saveInventory(RoomInventory inventory, String filePath) {
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
 
+                for (Map.Entry<String, Integer> e : inventory.rooms.entrySet()) {
+                    writer.write(e.getKey() + "=" + e.getValue());
+                    writer.newLine();
+                }
+
+                System.out.println("Inventory saved successfully.");
+
+            } catch (Exception e) {
+                System.out.println("Error saving inventory.");
+            }
+        }
+
+        public void loadInventory(RoomInventory inventory, String filePath) {
+            File file = new File(filePath);
+
+            if (!file.exists()) {
+                System.out.println("No valid inventory data found. Starting fresh.");
+                return;
+            }
+
+            try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+
+                String line;
+                while ((line = reader.readLine()) != null) {
+
+                    String[] parts = line.split("=");
+
+                    if (parts.length == 2) {
+                        inventory.rooms.put(parts[0], Integer.parseInt(parts[1]));
+                    }
+                }
+
+                System.out.println("Inventory loaded successfully.");
+
+            } catch (Exception e) {
+                System.out.println("Error loading inventory.");
+            }
+        }
+    }
+
+    // ===== MAIN METHOD =====
     public static void main(String[] args) {
 
-
-        System.out.println("=== UC7 Sort Bogies ===");
+        // ===== UC7: Sorting =====
+        System.out.println("=== UC7 Sorting ===");
 
         List<Bogie> bogies = new ArrayList<>();
         bogies.add(new Bogie("Sleeper", 72));
         bogies.add(new Bogie("AC Chair", 56));
         bogies.add(new Bogie("First Class", 24));
 
-        System.out.println("Before Sorting:");
-        for (Bogie b : bogies) {
-            System.out.println(b);
-        }
-
         bogies.sort(Comparator.comparingInt(b -> b.capacity));
 
-        System.out.println("\nAfter Sorting:");
         for (Bogie b : bogies) {
             System.out.println(b);
         }
 
+        // ===== UC11: Concurrent Booking =====
+        System.out.println("\n=== UC11 Concurrent Booking ===");
 
-        System.out.println("\n=== UC11 Concurrent Booking Simulation ===");
-
-        BookingRequestQueue bookingQueue = new BookingRequestQueue();
+        BookingRequestQueue queue = new BookingRequestQueue();
         RoomInventory inventory = new RoomInventory();
-        RoomAllocationService allocationService = new RoomAllocationService();
+        RoomAllocationService service = new RoomAllocationService();
 
+        queue.addRequest(new BookingRequest("Abhi", "Single"));
+        queue.addRequest(new BookingRequest("Vanmathi", "Double"));
+        queue.addRequest(new BookingRequest("Kural", "Suite"));
+        queue.addRequest(new BookingRequest("Subha", "Single"));
 
-        bookingQueue.addRequest(new BookingRequest("Abhi", "Single"));
-        bookingQueue.addRequest(new BookingRequest("Vanmathi", "Double"));
-        bookingQueue.addRequest(new BookingRequest("Kural", "Suite"));
-        bookingQueue.addRequest(new BookingRequest("Subha", "Single"));
-
-
-        Thread t1 = new Thread(new ConcurrentBookingProcessor(
-                bookingQueue, inventory, allocationService));
-
-        Thread t2 = new Thread(new ConcurrentBookingProcessor(
-                bookingQueue, inventory, allocationService));
-
+        Thread t1 = new Thread(new ConcurrentBookingProcessor(queue, inventory, service));
+        Thread t2 = new Thread(new ConcurrentBookingProcessor(queue, inventory, service));
 
         t1.start();
         t2.start();
@@ -181,11 +209,20 @@ public class TrainConsistManagementApp {
         try {
             t1.join();
             t2.join();
-        } catch (InterruptedException e) {
-            System.out.println("Thread execution interrupted.");
+        } catch (Exception e) {
+            System.out.println("Thread interrupted");
         }
 
-
         inventory.display();
+
+        // ===== UC12: Persistence =====
+        System.out.println("\n=== UC12 Persistence ===");
+
+        FilePersistenceService persistence = new FilePersistenceService();
+        String file = "inventory.txt";
+
+        persistence.loadInventory(inventory, file);
+        inventory.display();
+        persistence.saveInventory(inventory, file);
     }
 }
