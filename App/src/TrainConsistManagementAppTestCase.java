@@ -4,7 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class TrainConsistManagementAppTestCase {
 
-
+    // helper method
     private int totalCapacity(List<TrainConsistManagementApp.Bogie> bogies) {
         return bogies.stream()
                 .map(b -> b.getCapacity())
@@ -20,7 +20,7 @@ public class TrainConsistManagementAppTestCase {
 
         int result = totalCapacity(bogies);
 
-        assertEquals(128, result); // 72 + 56
+        assertEquals(128, result);
     }
 
     @Test
@@ -53,7 +53,7 @@ public class TrainConsistManagementAppTestCase {
 
         int result = totalCapacity(bogies);
 
-        assertEquals(0, result); // identity value
+        assertEquals(0, result);
     }
 
     @Test
