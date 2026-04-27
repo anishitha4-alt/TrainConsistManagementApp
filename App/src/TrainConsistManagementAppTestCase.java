@@ -1,9 +1,14 @@
+ UC17
+
+import static org.junit.Assert.assertArrayEquals;
+ main
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
 
 public class TrainConsistManagementAppTestCase {
 
     @Test
+ UC17
     void testSort_BasicAlphabeticalSorting() {
         String[] arr = {"Sleeper","AC Chair","First Class","General","Luxury"};
 
@@ -61,5 +66,44 @@ public class TrainConsistManagementAppTestCase {
                 new String[]{"Sleeper"},
                 arr
         );
+
+    void testSort_BasicSorting() {
+        int[] arr = {72, 56, 24, 70, 60};
+        TrainConsistManagementApp.bubbleSort(arr);
+
+        assertArrayEquals(new int[]{24, 56, 60, 70, 72}, arr);
+    }
+
+    @Test
+    void testSort_AlreadySortedArray() {
+        int[] arr = {24, 56, 60, 70, 72};
+        TrainConsistManagementApp.bubbleSort(arr);
+
+        assertArrayEquals(new int[]{24, 56, 60, 70, 72}, arr);
+    }
+
+    @Test
+    void testSort_DuplicateValues() {
+        int[] arr = {72, 56, 56, 24};
+        TrainConsistManagementApp.bubbleSort(arr);
+
+        assertArrayEquals(new int[]{24, 56, 56, 72}, arr);
+    }
+
+    @Test
+    void testSort_SingleElementArray() {
+        int[] arr = {50};
+        TrainConsistManagementApp.bubbleSort(arr);
+
+        assertArrayEquals(new int[]{50}, arr);
+    }
+
+    @Test
+    void testSort_AllEqualValues() {
+        int[] arr = {40, 40, 40};
+        TrainConsistManagementApp.bubbleSort(arr);
+
+        assertArrayEquals(new int[]{40, 40, 40}, arr);
+ main
     }
 }
