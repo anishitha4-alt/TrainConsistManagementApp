@@ -1,67 +1,40 @@
-import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 public class TrainConsistManagementAppTestCase {
 
-
     @Test
-    void testCargo_SafeAssignment() {
-        TrainConsistManagementApp.GoodsBogie g =
-                new TrainConsistManagementApp.GoodsBogie("Cylindrical");
+    void testSearch_BogieFound() {
+        String[] arr = {"BG101","BG205","BG309","BG412","BG550"};
 
-        g.assignCargo("Petroleum");
-
-        assertEquals("Petroleum", g.cargo);
+        assertTrue(TrainConsistManagementApp.linearSearch(arr, "BG309"));
     }
 
-
     @Test
-    void testCargo_UnsafeAssignmentHandled() {
-        TrainConsistManagementApp.GoodsBogie g =
-                new TrainConsistManagementApp.GoodsBogie("Rectangular");
+    void testSearch_BogieNotFound() {
+        String[] arr = {"BG101","BG205","BG309","BG412","BG550"};
 
-        g.assignCargo("Petroleum");
-
-        assertNull(g.cargo); // should NOT be assigned
+        assertFalse(TrainConsistManagementApp.linearSearch(arr, "BG999"));
     }
 
-
     @Test
-    void testCargo_CargoNotAssignedAfterFailure() {
-        TrainConsistManagementApp.GoodsBogie g =
-                new TrainConsistManagementApp.GoodsBogie("Rectangular");
+    void testSearch_FirstElementMatch() {
+        String[] arr = {"BG101","BG205","BG309"};
 
-        g.assignCargo("Petroleum");
-
-        assertNull(g.cargo);
+        assertTrue(TrainConsistManagementApp.linearSearch(arr, "BG101"));
     }
 
-
     @Test
-    void testCargo_ProgramContinuesAfterException() {
+    void testSearch_LastElementMatch() {
+        String[] arr = {"BG101","BG205","BG309"};
 
-        TrainConsistManagementApp.GoodsBogie g1 =
-                new TrainConsistManagementApp.GoodsBogie("Rectangular");
-
-        TrainConsistManagementApp.GoodsBogie g2 =
-                new TrainConsistManagementApp.GoodsBogie("Cylindrical");
-
-        g1.assignCargo("Petroleum"); // error
-        g2.assignCargo("Food");      // should still work
-
-        assertEquals("Food", g2.cargo);
+        assertTrue(TrainConsistManagementApp.linearSearch(arr, "BG309"));
     }
 
-
     @Test
-    void testCargo_FinallyBlockExecution() {
+    void testSearch_SingleElementArray() {
+        String[] arr = {"BG101"};
 
-        TrainConsistManagementApp.GoodsBogie g =
-                new TrainConsistManagementApp.GoodsBogie("Rectangular");
-
-        // just ensure no crash and method runs
-        g.assignCargo("Petroleum");
-
-        assertTrue(true);
+        assertTrue(TrainConsistManagementApp.linearSearch(arr, "BG101"));
     }
 }
