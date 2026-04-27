@@ -1,67 +1,65 @@
-import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 public class TrainConsistManagementAppTestCase {
 
-
     @Test
-    void testCargo_SafeAssignment() {
-        TrainConsistManagementApp.GoodsBogie g =
-                new TrainConsistManagementApp.GoodsBogie("Cylindrical");
+    void testSort_BasicAlphabeticalSorting() {
+        String[] arr = {"Sleeper","AC Chair","First Class","General","Luxury"};
 
-        g.assignCargo("Petroleum");
+        TrainConsistManagementApp.sortBogieNames(arr);
 
-        assertEquals("Petroleum", g.cargo);
+        assertArrayEquals(
+                new String[]{"AC Chair","First Class","General","Luxury","Sleeper"},
+                arr
+        );
     }
 
-
     @Test
-    void testCargo_UnsafeAssignmentHandled() {
-        TrainConsistManagementApp.GoodsBogie g =
-                new TrainConsistManagementApp.GoodsBogie("Rectangular");
+    void testSort_UnsortedInput() {
+        String[] arr = {"Luxury","General","Sleeper","AC Chair"};
 
-        g.assignCargo("Petroleum");
+        TrainConsistManagementApp.sortBogieNames(arr);
 
-        assertNull(g.cargo); // should NOT be assigned
+        assertArrayEquals(
+                new String[]{"AC Chair","General","Luxury","Sleeper"},
+                arr
+        );
     }
 
-
     @Test
-    void testCargo_CargoNotAssignedAfterFailure() {
-        TrainConsistManagementApp.GoodsBogie g =
-                new TrainConsistManagementApp.GoodsBogie("Rectangular");
+    void testSort_AlreadySortedArray() {
+        String[] arr = {"AC Chair","First Class","General"};
 
-        g.assignCargo("Petroleum");
+        TrainConsistManagementApp.sortBogieNames(arr);
 
-        assertNull(g.cargo);
+        assertArrayEquals(
+                new String[]{"AC Chair","First Class","General"},
+                arr
+        );
     }
 
-
     @Test
-    void testCargo_ProgramContinuesAfterException() {
+    void testSort_DuplicateBogieNames() {
+        String[] arr = {"Sleeper","AC Chair","Sleeper","General"};
 
-        TrainConsistManagementApp.GoodsBogie g1 =
-                new TrainConsistManagementApp.GoodsBogie("Rectangular");
+        TrainConsistManagementApp.sortBogieNames(arr);
 
-        TrainConsistManagementApp.GoodsBogie g2 =
-                new TrainConsistManagementApp.GoodsBogie("Cylindrical");
-
-        g1.assignCargo("Petroleum"); // error
-        g2.assignCargo("Food");      // should still work
-
-        assertEquals("Food", g2.cargo);
+        assertArrayEquals(
+                new String[]{"AC Chair","General","Sleeper","Sleeper"},
+                arr
+        );
     }
 
-
     @Test
-    void testCargo_FinallyBlockExecution() {
+    void testSort_SingleElementArray() {
+        String[] arr = {"Sleeper"};
 
-        TrainConsistManagementApp.GoodsBogie g =
-                new TrainConsistManagementApp.GoodsBogie("Rectangular");
+        TrainConsistManagementApp.sortBogieNames(arr);
 
-        // just ensure no crash and method runs
-        g.assignCargo("Petroleum");
-
-        assertTrue(true);
+        assertArrayEquals(
+                new String[]{"Sleeper"},
+                arr
+        );
     }
 }
