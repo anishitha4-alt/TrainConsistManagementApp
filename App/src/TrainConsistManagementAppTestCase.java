@@ -1,67 +1,47 @@
-import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 public class TrainConsistManagementAppTestCase {
 
-
     @Test
-    void testCargo_SafeAssignment() {
-        TrainConsistManagementApp.GoodsBogie g =
-                new TrainConsistManagementApp.GoodsBogie("Cylindrical");
-
-        g.assignCargo("Petroleum");
-
-        assertEquals("Petroleum", g.cargo);
+    void testBinarySearch_BogieFound() {
+        String[] arr = {"BG101","BG205","BG309","BG412","BG550"};
+        assertTrue(TrainConsistManagementApp.binarySearch(arr, "BG309"));
     }
 
-
     @Test
-    void testCargo_UnsafeAssignmentHandled() {
-        TrainConsistManagementApp.GoodsBogie g =
-                new TrainConsistManagementApp.GoodsBogie("Rectangular");
-
-        g.assignCargo("Petroleum");
-
-        assertNull(g.cargo); // should NOT be assigned
+    void testBinarySearch_BogieNotFound() {
+        String[] arr = {"BG101","BG205","BG309","BG412","BG550"};
+        assertFalse(TrainConsistManagementApp.binarySearch(arr, "BG999"));
     }
 
-
     @Test
-    void testCargo_CargoNotAssignedAfterFailure() {
-        TrainConsistManagementApp.GoodsBogie g =
-                new TrainConsistManagementApp.GoodsBogie("Rectangular");
-
-        g.assignCargo("Petroleum");
-
-        assertNull(g.cargo);
+    void testBinarySearch_FirstElementMatch() {
+        String[] arr = {"BG101","BG205","BG309","BG412","BG550"};
+        assertTrue(TrainConsistManagementApp.binarySearch(arr, "BG101"));
     }
 
-
     @Test
-    void testCargo_ProgramContinuesAfterException() {
-
-        TrainConsistManagementApp.GoodsBogie g1 =
-                new TrainConsistManagementApp.GoodsBogie("Rectangular");
-
-        TrainConsistManagementApp.GoodsBogie g2 =
-                new TrainConsistManagementApp.GoodsBogie("Cylindrical");
-
-        g1.assignCargo("Petroleum"); // error
-        g2.assignCargo("Food");      // should still work
-
-        assertEquals("Food", g2.cargo);
+    void testBinarySearch_LastElementMatch() {
+        String[] arr = {"BG101","BG205","BG309","BG412","BG550"};
+        assertTrue(TrainConsistManagementApp.binarySearch(arr, "BG550"));
     }
 
+    @Test
+    void testBinarySearch_SingleElementArray() {
+        String[] arr = {"BG101"};
+        assertTrue(TrainConsistManagementApp.binarySearch(arr, "BG101"));
+    }
 
     @Test
-    void testCargo_FinallyBlockExecution() {
+    void testBinarySearch_EmptyArray() {
+        String[] arr = {};
+        assertFalse(TrainConsistManagementApp.binarySearch(arr, "BG101"));
+    }
 
-        TrainConsistManagementApp.GoodsBogie g =
-                new TrainConsistManagementApp.GoodsBogie("Rectangular");
-
-        // just ensure no crash and method runs
-        g.assignCargo("Petroleum");
-
-        assertTrue(true);
+    @Test
+    void testBinarySearch_UnsortedInputHandled() {
+        String[] arr = {"BG309","BG101","BG550","BG205","BG412"};
+        assertTrue(TrainConsistManagementApp.binarySearch(arr, "BG205"));
     }
 }

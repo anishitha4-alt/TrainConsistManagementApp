@@ -1,59 +1,66 @@
+import java.util.Arrays;
+
 public class TrainConsistManagementApp {
 
-    // ===== CUSTOM RUNTIME EXCEPTION =====
-    static class CargoSafetyException extends RuntimeException {
-        public CargoSafetyException(String message) {
-            super(message);
-        }
-    }
+    // ===== UC19: BINARY SEARCH METHOD =====
+    public static boolean binarySearch(String[] bogieIds, String key) {
 
-
-    static class GoodsBogie {
-        String shape;
-        String cargo;
-
-        GoodsBogie(String shape) {
-            this.shape = shape;
+        // Handle empty array
+        if (bogieIds == null || bogieIds.length == 0) {
+            return false;
         }
 
-        // Assign cargo with safety validation
-        void assignCargo(String cargo) {
+        // Ensure sorted (important for test case)
+        Arrays.sort(bogieIds);
 
-            try {
-                // RULE: Rectangular cannot carry Petroleum
-                if (shape.equalsIgnoreCase("Rectangular") &&
-                        cargo.equalsIgnoreCase("Petroleum")) {
-                    throw new CargoSafetyException("Unsafe cargo assignment!");
-                }
+        int low = 0;
+        int high = bogieIds.length - 1;
 
-                this.cargo = cargo;
-                System.out.println("Cargo assigned successfully -> " + cargo);
+        while (low <= high) {
 
-            } catch (CargoSafetyException e) {
-                System.out.println("Error: " + e.getMessage());
+            int mid = (low + high) / 2;
 
-            } finally {
-                System.out.println("Cargo validation completed for "
-                        + shape + " bogie");
+            int comparison = bogieIds[mid].compareTo(key);
+
+            if (comparison == 0) {
+                return true; // found
+            } else if (comparison < 0) {
+                low = mid + 1; // search right
+            } else {
+                high = mid - 1; // search left
             }
         }
+
+        return false; // not found
     }
 
-
+    // ===== MAIN METHOD =====
     public static void main(String[] args) {
 
-        System.out.println("=================================");
-        System.out.println("UC15 Safe Cargo Assignment");
+        System.out.println("\n=================================");
+        System.out.println("UC19 Binary Search for Bogie ID");
         System.out.println("=================================\n");
 
+        String[] bogieIds = {"BG101", "BG205", "BG309", "BG412", "BG550"};
 
-        GoodsBogie g1 = new GoodsBogie("Cylindrical");
-        g1.assignCargo("Petroleum");
+        String key = "BG309";
 
+        // Ensure sorted before display
+        Arrays.sort(bogieIds);
 
-        GoodsBogie g2 = new GoodsBogie("Rectangular");
-        g2.assignCargo("Petroleum");
+        System.out.println("Sorted Bogie IDs:");
+        for (String id : bogieIds) {
+            System.out.print(id + " ");
+        }
 
-        System.out.println("\nUC15 runtime handling completed...");
+        boolean found = binarySearch(bogieIds, key);
+
+        if (found) {
+            System.out.println("\n\nBogie " + key + " Found using Binary Search.");
+        } else {
+            System.out.println("\n\nBogie " + key + " NOT found.");
+        }
+
+        System.out.println("\nUC19 search completed...");
     }
 }
