@@ -1,13 +1,50 @@
+ UC18
+
  UC17
 
 import static org.junit.Assert.assertArrayEquals;
  main
+  main
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
 
 public class TrainConsistManagementAppTestCase {
 
     @Test
+  UC18
+    void testSearch_BogieFound() {
+        String[] arr = {"BG101","BG205","BG309","BG412","BG550"};
+
+        assertTrue(TrainConsistManagementApp.linearSearch(arr, "BG309"));
+    }
+
+    @Test
+    void testSearch_BogieNotFound() {
+        String[] arr = {"BG101","BG205","BG309","BG412","BG550"};
+
+        assertFalse(TrainConsistManagementApp.linearSearch(arr, "BG999"));
+    }
+
+    @Test
+    void testSearch_FirstElementMatch() {
+        String[] arr = {"BG101","BG205","BG309"};
+
+        assertTrue(TrainConsistManagementApp.linearSearch(arr, "BG101"));
+    }
+
+    @Test
+    void testSearch_LastElementMatch() {
+        String[] arr = {"BG101","BG205","BG309"};
+
+        assertTrue(TrainConsistManagementApp.linearSearch(arr, "BG309"));
+    }
+
+    @Test
+    void testSearch_SingleElementArray() {
+        String[] arr = {"BG101"};
+
+        assertTrue(TrainConsistManagementApp.linearSearch(arr, "BG101"));
+ 
  UC17
     void testSort_BasicAlphabeticalSorting() {
         String[] arr = {"Sleeper","AC Chair","First Class","General","Luxury"};
@@ -105,5 +142,6 @@ public class TrainConsistManagementAppTestCase {
 
         assertArrayEquals(new int[]{40, 40, 40}, arr);
  main
+  main
     }
 }

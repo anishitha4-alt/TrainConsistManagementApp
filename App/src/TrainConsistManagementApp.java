@@ -5,6 +5,17 @@ public class TrainConsistManagementApp {
 
 public class TrainConsistManagementApp {
 
+UC18
+    // ===== UC18: LINEAR SEARCH METHOD =====
+    public static boolean linearSearch(String[] bogieIds, String searchId) {
+
+
+        for (String id : bogieIds) {
+
+
+            if (id.equals(searchId)) {
+                return true;
+
     // ===== CUSTOM RUNTIME EXCEPTION =====
     static class CargoSafetyException extends RuntimeException {
         public CargoSafetyException(String message) {
@@ -79,9 +90,38 @@ UC17
                     capacities[j] = capacities[j + 1];
                     capacities[j + 1] = temp;
                 }
+ main
             }
         }
+
+ UC18
+        return false;
     }
+
+    public static void main(String[] args) {
+
+        System.out.println("\n=================================");
+        System.out.println("UC18 Linear Search for Bogie ID");
+        System.out.println("=================================\n");
+
+         String[] bogieIds = {"BG101", "BG205", "BG309", "BG412", "BG550"};
+
+         String searchId = "BG309";
+
+         System.out.println("Available Bogie IDs:");
+        for (String id : bogieIds) {
+            System.out.print(id + " ");
+        }
+
+         boolean found = linearSearch(bogieIds, searchId);
+
+         if (found) {
+            System.out.println("\n\nBogie " + searchId + " found in train consist.");
+        } else {
+            System.out.println("\n\nBogie " + searchId + " NOT found.");
+        }
+
+        System.out.println("\nUC18 search completed...");
 
     // ===== MAIN METHOD =====
     public static void main(String[] args) {
@@ -120,6 +160,7 @@ UC17
         }
 
         System.out.println("\n\nUC16 sorting completed...");
+ main
  main
     }
 }
